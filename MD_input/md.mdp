@@ -1,0 +1,60 @@
+; include restraints into the topology
+
+; RUN CONTROL ( 1250000*0.002 ps = 5000 ps = 5.0 ns )
+integrator = md
+tinit = 0
+dt = 0.002
+nsteps = 1250000000
+init-step = 0
+comm-mode = Linear
+nstcomm = 100
+comm-grps = DNA Water_and_ions
+
+; OUTPUT CONTROL
+nstxtcout = 5000 ; 
+nstvout = 100000 ; 200 ps
+nstlog  = 500000   ; 2 ps
+
+; BONDS
+constraints = h-bonds
+constraint-algorithm = LINCS
+continuation = yes
+lincs-iter = 1 
+lincs-order = 4
+
+; NEIGHBOR SEARCH
+cutoff-scheme = Verlet
+nstlist = 25 ; steps
+ns-type = grid
+pbc = xyz
+periodic-molecules = no
+;verlet-buffer-tolerance = 0.005 ; default, sets rlist
+
+; ELECTROSTATICS
+coulombtype = PME
+rcoulomb = 1.2
+fourierspacing = 0.12
+pme-order = 4
+
+; VDW
+vdwtype = cut-off
+vdw-modifier = None
+;DispCorr = EnerPres
+rvdw = 1.2
+rlist = 1.2
+
+; TEMPERATURE COUPLING
+tcoupl = v-rescale
+tc-grps = DNA Water_and_ions ; more correct
+tau-t = 1.0 1.0
+ref-t = 300 300
+
+; PRESSURE COUPLING
+;pcoupl = no
+;pcoupl = berendsen
+pcoupl = parrinello-rahman
+pcoupltype = isotropic
+tau-p = 1.0
+compressibility = 4.5e-5
+ref-p = 1.01325
+refcoord-scaling = all
